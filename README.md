@@ -28,7 +28,7 @@ You also should have Python 3 pip tool to install needed libraries. If you have 
 
         pip3 install influxdb requests tabulate
 
-3. Clone andyceo's libraries for script (they are not packaged into pip):
+3. Clone [andyceo's libraries](https://github.com/andyceo/pylibs) for script (they are not packaged into pip):
 
         git clone https://github.com/andyceo/pylibs.git
 
@@ -40,4 +40,4 @@ You also should have Python 3 pip tool to install needed libraries. If you have 
 
         ./node-info-monitor.py sync-daemon
 
-You also can sync just current values and exit with `sync` argument, view current API `/info` data and exit with `show`, and view last 1 day values from InfluxDB with `show-influx`.
+You also can sync just current values and exit with `sync` argument, view current API `/info` data and exit with `show`, and view last 1 day values from InfluxDB with `show-influx`. Run script with `-h` option to view help message: `./node-info-monitor.py -h`.
