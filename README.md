@@ -38,4 +38,6 @@ You also should have Python 3 pip tool to install needed libraries. If you have 
 
 5. Start monitoring:
 
-        ./node-info-monitor.py
+        ./node-info-monitor.py sync-daemon
+
+You also can sync just current values and exit with `sync` argument, view current API `/info` data and exit with `show`, and view last 1 day values from InfluxDB with `show-influx`.
