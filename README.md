@@ -26,7 +26,7 @@ You also should have Python 3 pip tool to install needed libraries. If you have 
 
 2. Install dependencies:
 
-        pip3 install influxdb requests tabulate
+        pip3 install -r requirements.txt
 
 3. Clone [andyceo's libraries](https://github.com/andyceo/pylibs) for script (they are not packaged into pip):
 
