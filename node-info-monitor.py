@@ -28,14 +28,20 @@ def get_info(url):
 
     if response.status_code == 200:
         info = response.json()
-        monitor['fields']['difficulty'] = int(info['difficulty'])
-        monitor['fields']['peersCount'] = info['peersCount']
-        monitor['fields']['unconfirmedCount'] = info['unconfirmedCount']
-        monitor['fields']['fullHeight'] = info['fullHeight']
-        monitor['fields']['headersHeight'] = info['headersHeight']
+        monitor['fields']['difficulty'] = null_or_int(info['difficulty'])
+        monitor['fields']['peersCount'] = null_or_int(info['peersCount'])
+        monitor['fields']['unconfirmedCount'] = null_or_int(info['unconfirmedCount'])
+        monitor['fields']['fullHeight'] = null_or_int(info['fullHeight'])
+        monitor['fields']['headersHeight'] = null_or_int(info['headersHeight'])
         monitor['more']['name'] = info['name']
 
     return monitor
+
+
+def null_or_int(v):
+    if v == 'null':
+        return v
+    return int(v)
 
 
 def sync(monitor):
