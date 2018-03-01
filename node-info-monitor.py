@@ -35,9 +35,9 @@ def get_info(url):
             elif isinstance(info[field], str):
                 if field == 'difficulty':
                     monitor['fields'][field] = int(info[field])
-                else
-                    raise ValueError('JSON from Ergo node is incorrect: {} must be integer, not string! (raw value is {})'
-                                 .format(field, info[field]))
+                else:
+                    raise ValueError('JSON from Ergo node is incorrect: {} must be integer, not string! '
+                                     '(raw value is {})'.format(field, info[field]))
             else:
                 monitor['fields'][field] = info[field]
 
