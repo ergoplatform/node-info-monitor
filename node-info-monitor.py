@@ -33,7 +33,8 @@ def get_info(url):
             if info[field] is None:
                 continue
             elif isinstance(info[field], str):
-                raise ValueError('JSON from Ergo node is incorrect: integer as string!')
+                raise ValueError('JSON from Ergo node is incorrect: {} must be integer, not string! (raw value is {})'
+                                 .format(field, info[field]))
             else:
                 monitor['fields'][field] = info[field]
 
