@@ -67,7 +67,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.action[0] == 'show':
-        print(get_info(config['DEFAULT']['node_url'] + '/info'))
+        print(get_info(config['monitoring']['node_url'] + '/info'))
 
     elif args.action[0] == 'show-influx':
         cl = influxdb.connect(config['influxdb'])
@@ -75,18 +75,18 @@ if __name__ == '__main__':
         print(tabulate.tabulate(res.get_points(), headers="keys"))
 
     elif args.action[0] == 'sync':
-        monitor = get_info(config['DEFAULT']['node_url'] + '/info')
+        monitor = get_info(config['monitoring']['node_url'] + '/info')
         sync(monitor)
 
     elif args.action[0] == 'sync-daemon':
         utils.message('Syncing Ergo node info daemon started.')
         while True:
-            monitor = get_info(config['DEFAULT']['node_url'] + '/info')
+            monitor = get_info(config['monitoring']['node_url'] + '/info')
             if monitor['fields']['status_code'] != 200:
                 print('Error {} occurred when processing node info, apply cooldown pause for {} seconds'.format(
-                    monitor['fields']['status_code'], config['DEFAULT']['cooldown_pause']))
-                time.sleep(int(config['DEFAULT']['cooldown_pause']))
+                    monitor['fields']['status_code'], config['monitoring']['cooldown_pause']))
+                time.sleep(int(config['monitoring']['cooldown_pause']))
             else:
                 sync(monitor)
-                time.sleep(int(config['DEFAULT']['pause']))
+                time.sleep(int(config['monitoring']['pause']))
             sys.stdout.flush()
