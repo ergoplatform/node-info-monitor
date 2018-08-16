@@ -29,15 +29,12 @@ def get_info(url):
     if response.status_code == 200:
         info = response.json()
 
-        for field in ['difficulty', 'peersCount', 'unconfirmedCount', 'fullHeight', 'headersHeight']:
-            if info[field] is None:
+        for field in ['difficulty', 'peersCount', 'unconfirmedCount', 'fullHeight', 'headersHeight', 'appVersion']:
+            if field not in info or info[field] is None:
                 continue
-            elif isinstance(info[field], str):
-                if field == 'difficulty':
-                    monitor['fields'][field] = int(info[field])
-                else:
-                    raise ValueError('JSON from Ergo node is incorrect: {} must be integer, not string! '
-                                     '(raw value is {})'.format(field, info[field]))
+            elif isinstance(info[field], str) and field != 'appVersion':
+                raise ValueError('JSON from Ergo node is incorrect: {} must be integer, not string! '
+                                 '(raw value is {})'.format(field, info[field]))
             else:
                 monitor['fields'][field] = info[field]
 
