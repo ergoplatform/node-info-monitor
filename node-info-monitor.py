@@ -25,7 +25,7 @@ def get_info(url):
 
     try:
         response = requests.get(url)
-    except requests.exceptions.BaseHTTPError as err:
+    except requests.exceptions.HTTPError as err:
         monitor['more']['timestamp_end'] = time.time()
         monitor['more']['exception'] = err
         utils.message('!HTTP Exception while getting Ergo node info at {}: {}'.format(url, err))
