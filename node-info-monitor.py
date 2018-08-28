@@ -12,33 +12,45 @@ from pylibs import utils
 
 def get_info(url):
     timestamp_start = time.time()
-    response = requests.get(url)
-    timestamp_end = time.time()
 
     monitor = {
         'fields': {
-            'response_time': timestamp_end - timestamp_start,
-            'status_code': response.status_code,
+            'response_time': None,
+            'status_code': 0,
         },
         'more': {
             'timestamp_start': timestamp_start,
-            'timestamp_end': timestamp_end,
+            'timestamp_end': None,
+            'exception': None
         }
     }
 
-    if response.status_code == 200:
-        info = response.json()
+    try:
+        response = requests.get(url)
+    except requests.exceptions.BaseHTTPError as err:
+        timestamp_end = time.time()
+        monitor['more']['exception'] = err
+        utils.message('!HTTP Exception while getting Ergo node info at {}: {}'.format(url, err))
+    else:
+        timestamp_end = time.time()
+        monitor['fields']['status_code'] = response.status_code
 
-        for field in ['difficulty', 'peersCount', 'unconfirmedCount', 'fullHeight', 'headersHeight', 'appVersion']:
-            if field not in info or info[field] is None:
-                continue
-            elif isinstance(info[field], str) and field != 'appVersion':
-                raise ValueError('JSON from Ergo node is incorrect: {} must be integer, not string! '
-                                 '(raw value is {})'.format(field, info[field]))
-            else:
-                monitor['fields'][field] = info[field]
+        if response.status_code == 200:
+            info = response.json()
 
-        monitor['more']['name'] = info['name']
+            for field in ['difficulty', 'peersCount', 'unconfirmedCount', 'fullHeight', 'headersHeight', 'appVersion']:
+                if field not in info or info[field] is None:
+                    continue
+                elif isinstance(info[field], str) and field != 'appVersion':
+                    raise ValueError('JSON from Ergo node is incorrect: {} must be integer, not string! '
+                                     '(raw value is {})'.format(field, info[field]))
+                else:
+                    monitor['fields'][field] = info[field]
+
+            monitor['more']['name'] = info['name']
+    finally:
+        monitor['more']['timestamp_end'] = timestamp_end
+        monitor['fields']['response_time'] = timestamp_end - timestamp_start
 
     return monitor
 
