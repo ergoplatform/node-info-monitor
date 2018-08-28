@@ -46,8 +46,8 @@ def get_info(url):
                     monitor['fields'][field] = info[field]
 
             monitor['more']['name'] = info['name']
-
-    monitor['fields']['response_time'] = monitor['more']['timestamp_end'] - monitor['more']['timestamp_start']
+    finally:
+        monitor['fields']['response_time'] = monitor['more']['timestamp_end'] - monitor['more']['timestamp_start']
 
     return monitor
 
