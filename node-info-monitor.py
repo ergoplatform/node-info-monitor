@@ -11,15 +11,13 @@ from pylibs import utils
 
 
 def get_info(url):
-    timestamp_start = time.time()
-
     monitor = {
         'fields': {
             'response_time': None,
             'status_code': 0,
         },
         'more': {
-            'timestamp_start': timestamp_start,
+            'timestamp_start': time.time(),
             'timestamp_end': None,
             'exception': None
         }
@@ -28,11 +26,11 @@ def get_info(url):
     try:
         response = requests.get(url)
     except requests.exceptions.BaseHTTPError as err:
-        timestamp_end = time.time()
+        monitor['more']['timestamp_end'] = time.time()
         monitor['more']['exception'] = err
         utils.message('!HTTP Exception while getting Ergo node info at {}: {}'.format(url, err))
     else:
-        timestamp_end = time.time()
+        monitor['more']['timestamp_end'] = time.time()
         monitor['fields']['status_code'] = response.status_code
 
         if response.status_code == 200:
@@ -49,8 +47,7 @@ def get_info(url):
 
             monitor['more']['name'] = info['name']
     finally:
-        monitor['more']['timestamp_end'] = timestamp_end
-        monitor['fields']['response_time'] = timestamp_end - timestamp_start
+        monitor['fields']['response_time'] = monitor['more']['timestamp_end'] - monitor['more']['timestamp_start']
 
     return monitor
 
