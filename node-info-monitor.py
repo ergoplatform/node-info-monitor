@@ -65,8 +65,8 @@ def sync(monitor):
         "fields": monitor['fields']
     }]
     client = influxdb.connect(config['influxdb'])
-    influxdb.write_points_with_exception_handling(client, json_body)
-    utils.message('Ergo node {} info metrics was saved to InfluxDB at timestamp {}.'.format(name, timestamp))
+    if influxdb.write_points_with_exception_handling(client, json_body):
+        utils.message('Ergo node {} info metrics was saved to InfluxDB at timestamp {}.'.format(name, timestamp))
 
 
 if __name__ == '__main__':
