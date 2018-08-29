@@ -29,6 +29,10 @@ def get_info(url):
         monitor['more']['timestamp_end'] = time.time()
         monitor['more']['exception'] = err
         utils.message('!HTTP Exception while getting Ergo node info at {}: {}'.format(url, err))
+    except Exception as err:
+        monitor['more']['timestamp_end'] = time.time()
+        monitor['more']['exception'] = err
+        utils.message('!Exception (non-HTTP) while getting Ergo node info at {}: {}'.format(url, err))
     else:
         monitor['more']['timestamp_end'] = time.time()
         monitor['fields']['status_code'] = response.status_code
