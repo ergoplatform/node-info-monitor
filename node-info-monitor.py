@@ -24,7 +24,8 @@ def get_info(url):
     }
 
     try:
-        response = requests.get(url)
+        # need stream=True for be able read ip
+        response = requests.get(url, stream=True)
     except requests.exceptions.HTTPError as err:
         monitor['more']['timestamp_end'] = time.time()
         monitor['more']['exception'] = err
@@ -34,13 +35,16 @@ def get_info(url):
         monitor['more']['exception'] = err
         utils.message('!Exception (non-HTTP) while getting Ergo node info at {}: {}'.format(url, err))
     else:
+        # we must read ip first
+        monitor['fields']['ip'] = response.raw._connection.sock.getpeername()[0]
         monitor['more']['timestamp_end'] = time.time()
         monitor['fields']['status_code'] = response.status_code
 
         if response.status_code == 200:
             info = response.json()
 
-            for field in ['difficulty', 'peersCount', 'unconfirmedCount', 'fullHeight', 'headersHeight', 'appVersion']:
+            for field in ['difficulty', 'peersCount', 'unconfirmedCount', 'fullHeight', 'headersHeight', 'appVersion',
+                          'fullBlocksScore', 'headersScore']:
                 if field not in info or info[field] is None:
                     continue
                 elif isinstance(info[field], str) and field != 'appVersion':
@@ -50,6 +54,7 @@ def get_info(url):
                     monitor['fields'][field] = info[field]
 
             monitor['more']['name'] = info['name']
+            monitor['more']['genesisBlockId'] = info['genesisBlockId']
     finally:
         monitor['fields']['response_time'] = monitor['more']['timestamp_end'] - monitor['more']['timestamp_start']
 
@@ -62,7 +67,7 @@ def sync(monitor):
     json_body = [{
         "time": round(timestamp * 1000000000),
         "measurement": "node_info",
-        "tags": {'name': name, 'net': 'testnet'},
+        "tags": {'name': name, 'genesisBlockId': monitor['more']['genesisBlockId']},
         "fields": monitor['fields']
     }]
     client = influxdb.connect(config['influxdb'])
