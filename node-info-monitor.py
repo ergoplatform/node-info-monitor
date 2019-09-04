@@ -2,7 +2,6 @@
 
 import argparse
 import json
-import pprint
 import requests
 import sys
 import tabulate
@@ -89,7 +88,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.action[0] == 'show':
-        pprint.pprint(json.dumps(get_info(config['monitoring']['node_url'] + '/info')))
+        print(json.dumps(get_info(config['monitoring']['node_url'] + '/info'), indent=4))
 
     elif args.action[0] == 'show-influx':
         cl = influxdb.connect(config['influxdb'])
