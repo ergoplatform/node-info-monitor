@@ -25,7 +25,7 @@ def get_info(url):
 
     try:
         # need stream=True for be able read ip
-        response = requests.get(url, stream=True)
+        response = requests.get(url, stream=True, timeout=5)
     except requests.exceptions.HTTPError as err:
         monitor['more']['timestamp_end'] = time.time()
         monitor['more']['exception'] = err
