@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
+import pprint
 import requests
+import sys
 import tabulate
 import time
-import sys
 from pylibs import config
 from pylibs import influxdb
 from pylibs import utils
@@ -87,7 +88,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.action[0] == 'show':
-        print(get_info(config['monitoring']['node_url'] + '/info'))
+        pprint.pprint(get_info(config['monitoring']['node_url'] + '/info'))
 
     elif args.action[0] == 'show-influx':
         cl = influxdb.connect(config['influxdb'])
