@@ -53,6 +53,11 @@ def get_info(url):
                 else:
                     monitor['fields'][field] = info[field]
 
+            # special handling for parameters field
+            for field in info['parameters']:
+                if isinstance(info['parameters'][field], int):
+                    monitor['fields']['parameters_'+field] = info['parameters'][field]
+
             monitor['more']['name'] = info['name']
             monitor['more']['genesisBlockId'] = info['genesisBlockId']
     finally:
