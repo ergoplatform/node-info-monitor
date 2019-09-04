@@ -1,4 +1,5 @@
-This repository provide API `/info` monitoring tool.
+This repository provide Ergo node REST API `/info` route monitoring tool.
+
 
 ## Usage with Docker
 
@@ -7,6 +8,11 @@ You should have preinstalled InfluxDB and/or have credentials like username/pass
     sudo docker container run -d --restart=unless-stopped -v /your/config.ini:/app/config.ini ergoplatform/node-info-monitor
 
 The command above will start monitoring daemon as docker container and start requesting `/info` Ergo node API endpoint to collect data and store it into InfluxDB. Also it will always will try to restart monitoring when something go wrong unless you stop container explicitly.
+
+
+Another example shows how to print data that goes to InfluxDB:
+
+    sudo docker run --rm -e INFLUXDB_PASSWORD="" -e MONITORING_NODE_URL="http://209.97.134.210:9052" ergoplatform/node-info-monitor show
 
 
 ## Usage without Docker
