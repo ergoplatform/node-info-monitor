@@ -44,8 +44,9 @@ def get_info(url):
         if response.status_code == 200:
             info = response.json()
 
-            for field in ['difficulty', 'peersCount', 'unconfirmedCount', 'fullHeight', 'headersHeight', 'appVersion',
-                          'fullBlocksScore', 'headersScore']:
+            # For mainnet the values of fullBlocksScore=9228554086696091648i,headersScore=9228554086696091648i
+            # are too much for InfluxDB, so these fields were removed from monitoring
+            for field in ['difficulty', 'peersCount', 'unconfirmedCount', 'fullHeight', 'headersHeight', 'appVersion']:
                 if field not in info or info[field] is None:
                     continue
                 elif isinstance(info[field], str) and field != 'appVersion':
