@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Utility that get Ergo node info and put it into InlfuxDB"""
 import argparse
 import json
 import requests
@@ -84,7 +85,7 @@ def sync(monitor):
 
 if __name__ == '__main__':
     config = parse(True)
-    parser = argparse.ArgumentParser(description='Get Ergo node info')
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', nargs=1, metavar="show|show-influx|sync|sync-daemon",
                         help='Choose your action: show or sync Ergo node info')
     args = parser.parse_args()
