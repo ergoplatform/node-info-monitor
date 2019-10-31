@@ -6,8 +6,8 @@ import requests
 import sys
 import tabulate
 import time
-from pylibs import config
-from pylibs import influxdb
+from pylibs.config import parse
+from pylibs import dbinflux
 from pylibs import utils
 
 
@@ -77,12 +77,13 @@ def sync(monitor):
         "tags": {'name': name, 'genesisBlockId': monitor['more']['genesisBlockId']},
         "fields": monitor['fields']
     }]
-    client = influxdb.connect(config['influxdb'])
-    if influxdb.write_points_with_exception_handling(client, json_body):
+    client = dbinflux.connect(config['influxdb'])
+    if dbinflux.write_points_with_exception_handling(client, json_body):
         utils.message('Ergo node {} info metrics was saved to InfluxDB at timestamp {}.'.format(name, timestamp))
 
 
 if __name__ == '__main__':
+    config = parse(True)
     parser = argparse.ArgumentParser(description='Get Ergo node info')
     parser.add_argument('action', nargs=1, metavar="show|show-influx|sync|sync-daemon",
                         help='Choose your action: show or sync Ergo node info')
@@ -92,7 +93,7 @@ if __name__ == '__main__':
         print(json.dumps(get_info(config['monitoring']['node_url'] + '/info'), indent=4))
 
     elif args.action[0] == 'show-influx':
-        cl = influxdb.connect(config['influxdb'])
+        cl = dbinflux.connect(config['influxdb'])
         res = cl.query("SELECT * FROM node_info WHERE time > now() - 1d")
         print(tabulate.tabulate(res.get_points(), headers="keys"))
 
